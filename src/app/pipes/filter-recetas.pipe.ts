@@ -4,7 +4,7 @@ import { Receta } from '../model/receta';
 @Pipe({name: 'filterRecetas'})
 export class FilterRecetas implements PipeTransform {
 
-  transform(recetas: Receta[], searchText: string, isGlutenFree : boolean ): Receta[] {  
+  transform(recetas: Receta[], searchText: string, isGlutenFree: boolean ): Receta[] {
 
     //si no hay recetas retornar vacio
     if (!recetas) return [];
@@ -13,7 +13,7 @@ export class FilterRecetas implements PipeTransform {
 
     //Filtramos si llevan gluten o no
     if (isGlutenFree) {
-      recetasFilterArray = recetas.filter( (receta)=> receta.isGlutenFree );
+      recetasFilterArray = recetas.filter( (receta) => receta.isGlutenFree );
     } else {
       recetasFilterArray = recetas;
     }
@@ -23,11 +23,12 @@ export class FilterRecetas implements PipeTransform {
       return recetasFilterArray;
     } else {
       searchText = searchText.toLowerCase();
-      let receta = '';
+      let receta = [];
       return recetasFilterArray.filter(it => {
-        receta = it.nombre + it.ingredientes + it.cocinero;
-        receta = receta.toLowerCase();
-        return receta.includes(searchText);
+        // Generamos un array de los terminos que se pueden buscar
+        receta = [it.nombre, ...it.ingredientes, it.cocinero];
+        // Buscamos dentro de ese array algún termino que contenga el searchString
+        return receta.some((it => it.toLowerCase().includes(searchText)));
       });
     }
   }
